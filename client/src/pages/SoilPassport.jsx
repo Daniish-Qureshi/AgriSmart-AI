@@ -39,7 +39,7 @@ export default function SoilPassport() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          await fetch('http://localhost:5000/api/data/soil', {
+          await fetch(`${import.meta.env.VITE_API_URL}/api/ai/soil-suggest`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

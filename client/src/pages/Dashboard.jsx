@@ -21,8 +21,8 @@ export default function Dashboard() {
 
       try {
         const [simRes, soilRes] = await Promise.all([
-          fetch('http://localhost:5000/api/data/simulation', { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch('http://localhost:5000/api/data/soil', { headers: { 'Authorization': `Bearer ${token}` } })
+          fetch(`${import.meta.env.VITE_API_URL}/api/data/simulation`, { headers: { 'Authorization': `Bearer ${token}` } }),
+          fetch(`${import.meta.env.VITE_API_URL}/api/data/soil`, { headers: { 'Authorization': `Bearer ${token}` } })
         ])
 
         if (simRes.ok) setSimulations(await simRes.json())

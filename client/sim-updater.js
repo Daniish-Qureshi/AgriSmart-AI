@@ -6,7 +6,7 @@ const replacement = `      setResult({ totalCost, totalProfit, netProfit, roi, b
       try {
         const token = localStorage.getItem('token');
         if (token) {
-          fetch('http://localhost:5000/api/data/simulation', {
+          fetch('${import.meta.env.VITE_API_URL}/api/data/simulation', {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',

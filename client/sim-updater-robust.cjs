@@ -9,7 +9,7 @@ const replacement = `setResult({ totalCost, totalProfit, netProfit, roi, budgetS
       const token = localStorage.getItem('token')
       if (token) {
         try {
-          fetch('http://localhost:5000/api/data/simulation', {
+          fetch('${import.meta.env.VITE_API_URL}/api/data/simulation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': \`Bearer \${token}\` },
             body: JSON.stringify({ crop_name: crop, budget, season, acres, estimated_profit: netProfit, risk_percent: data.risk })

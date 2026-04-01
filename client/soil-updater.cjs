@@ -6,7 +6,7 @@ const replacement = `      setResult({ phStatus, phColor, overallScore, suggesti
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          await fetch('http://localhost:5000/api/data/soil', {
+          await fetch('${import.meta.env.VITE_API_URL}/api/data/soil', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

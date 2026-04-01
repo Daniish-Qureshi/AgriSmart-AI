@@ -10,22 +10,17 @@ lerna-debug.log*
 # Dependencies
 node_modules
 
-# Build output
+# Build
 dist
 dist-ssr
 *.local
 
-# ─── ENV FILES — SABSE IMPORTANT ───
+# ENV FILES
 .env
 .env.*
 .env.local
 .env.development
 .env.production
-.env.test
-*/.env
-*/.env.*
-backend/.env
-frontend/.env
 
 # Editor
 .vscode/*

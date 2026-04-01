@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { API_URL } from './config'
 
 export default function AgriBot() {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function AgriBot() {
         const token = localStorage.getItem('token');
 
         try {
-           const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ai/chat`, {
+           const res = await fetch(`${API_URL}/api/ai/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

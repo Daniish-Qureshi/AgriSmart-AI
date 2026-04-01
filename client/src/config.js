@@ -1,0 +1,1 @@
+export const API_URL = "https://agrismart-ai-d2dl.onrender.com"

@@ -1,3 +1,4 @@
+import { API_URL } from './config'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -21,8 +22,8 @@ export default function Dashboard() {
 
       try {
         const [simRes, soilRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/data/simulation`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${import.meta.env.VITE_API_URL}/api/data/soil`, { headers: { 'Authorization': `Bearer ${token}` } })
+          fetch(`${API_URL}/api/data/simulation`, { headers: { 'Authorization': `Bearer ${token}` } }),
+          fetch(`${API_URL}/api/data/soil`, { headers: { 'Authorization': `Bearer ${token}` } })
         ])
 
         if (simRes.ok) setSimulations(await simRes.json())

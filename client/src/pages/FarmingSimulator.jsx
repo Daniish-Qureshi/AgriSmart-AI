@@ -1,3 +1,4 @@
+import { API_URL } from './config'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -46,7 +47,7 @@ export default function FarmingSimulator() {
       // Groq AI Advice
       setAiLoading(true)
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ai/simulate-advice`, {
+        const res = await fetch(`${API_URL}/api/ai/simulate-advice`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ crop, acres, season, budget, profit: netProfit, risk: data.risk })

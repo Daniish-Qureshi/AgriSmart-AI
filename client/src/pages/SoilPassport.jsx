@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from './config'
 
 const navItems = ['Dashboard', 'Simulator', 'Risk Estimator', 'Soil Passport', 'Profit Estimator', 'Seasonal Planner', 'Alerts']
 const navIcons = ['📊', '🌿', '⚠️', '🪱', '💰', '📅', '🔔']
@@ -39,7 +40,7 @@ export default function SoilPassport() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          await fetch(`${import.meta.env.VITE_API_URL}/api/ai/soil-suggest`, {
+          await fetch(`${API_URL}/api/ai/soil-suggest`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

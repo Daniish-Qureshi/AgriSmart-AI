@@ -10,7 +10,7 @@ const app = express()
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://agrismart-ai.vercel.app',
+    'https://agri-smart-ai-xi.vercel.app/',
     /\.vercel\.app$/  // sabhi vercel subdomains allow
   ],
   credentials: true

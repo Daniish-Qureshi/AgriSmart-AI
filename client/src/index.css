@@ -1,0 +1,61 @@
+@import "tailwindcss";
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+* { box-sizing: border-box; }
+
+/* ── Page Layout ── */
+.page-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #0d2818;
+  font-family: 'DM Sans', sans-serif;
+  color: #fff;
+}
+
+.main-content {
+  margin-left: 240px;
+  flex: 1;
+  padding: 32px 36px;
+  min-width: 0;
+}
+
+/* ── Responsive Grids ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: flex; gap: 16px; flex-wrap: wrap; }
+.grid-4 > * { flex: 1; min-width: 200px; }
+
+/* ── Cards ── */
+.dash-card {
+  background: rgba(26,74,46,0.4);
+  border: 1px solid rgba(76,175,114,0.15);
+  border-radius: 16px;
+  padding: 24px;
+  transition: border-color 0.3s;
+}
+.dash-card:hover { border-color: rgba(232,184,75,0.25); }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    padding: 70px 16px 24px !important;
+  }
+
+  .grid-2 { grid-template-columns: 1fr !important; }
+  .grid-3 { grid-template-columns: 1fr !important; }
+  .grid-4 { flex-direction: column !important; }
+  .grid-4 > * { min-width: unset !important; }
+
+  h1 { font-size: 1.4rem !important; }
+  h2 { font-size: 1.1rem !important; }
+
+  /* Hide desktop stat cards on landing */
+  .hero-stats { display: none !important; }
+}
+
+@media (max-width: 480px) {
+  .main-content { padding: 60px 12px 20px !important; }
+}

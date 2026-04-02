@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { API_URL } from './config'
+import { API_URL } from '../config';
 
 export default function AgriBot() {
     const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API_URL } from './config'
+import { API_URL } from '../config'
 
 const navItems = ['Dashboard', 'Simulator', 'Risk Estimator', 'Soil Passport', 'Profit Estimator', 'Seasonal Planner', 'Alerts']
 const navIcons = ['📊', '🌿', '⚠️', '🪱', '💰', '📅', '🔔']

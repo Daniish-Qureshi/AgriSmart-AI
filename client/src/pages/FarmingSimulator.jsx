@@ -44,7 +44,29 @@ export default function FarmingSimulator() {
       setResult({ totalCost, totalProfit, netProfit, roi, budgetSufficient, data, isProfit: netProfit > 0 })
       setLoading(false)
 
-      // Groq AI Advice
+      // ── Database me save karo ──
+      try {
+        const token = localStorage.getItem('token')
+        await fetch(`${API_URL}/api/data/simulation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            crop_name: crop,
+            budget: parseFloat(budget),
+            season,
+            acres: parseFloat(acres),
+            estimated_profit: netProfit,
+            risk_percent: data.risk
+          })
+        })
+      } catch (err) {
+        console.error('Simulation save error:', err)
+      }
+
+      // ── Groq AI Advice ──
       setAiLoading(true)
       try {
         const res = await fetch(`${API_URL}/api/ai/simulate-advice`, {
@@ -65,7 +87,6 @@ export default function FarmingSimulator() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#0d2818', fontFamily: "'DM Sans', sans-serif", color: '#fff' }}>
-      {/* <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" /> */}
       <style>{`
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 0.88rem; font-weight: 500; color: #a8c4b0; margin-bottom: 4px; }
         .nav-item:hover { background: rgba(76,175,114,0.1); color: #fff; }
@@ -107,7 +128,7 @@ export default function FarmingSimulator() {
             <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{user.name}</div>
             <div style={{ fontSize: '0.72rem', color: '#a8c4b0' }}>{user.location}</div>
           </div>
-          <div onClick={() => { localStorage.removeItem('user'); navigate('/') }} style={{ marginLeft: 'auto', cursor: 'pointer', color: '#a8c4b0' }} title="Logout">↩</div>
+          <div onClick={(e) => { e.stopPropagation(); localStorage.removeItem('user'); navigate('/') }} style={{ marginLeft: 'auto', cursor: 'pointer', color: '#a8c4b0' }} title="Logout">↩</div>
         </div>
       </div>
 
@@ -199,8 +220,6 @@ export default function FarmingSimulator() {
 
             {result && !loading && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, animation: 'fadeUp 0.5s ease both' }}>
-
-                {/* Main Result Banner */}
                 <div style={{ padding: '20px', borderRadius: 14, background: result.isProfit ? 'rgba(76,175,114,0.15)' : 'rgba(239,68,68,0.15)', border: `1px solid ${result.isProfit ? 'rgba(76,175,114,0.4)' : 'rgba(239,68,68,0.4)'}`, textAlign: 'center' }}>
                   <div style={{ fontSize: '2rem', marginBottom: 8 }}>{result.isProfit ? '📈' : '📉'}</div>
                   <div style={{ fontSize: '0.8rem', color: '#a8c4b0', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -214,13 +233,12 @@ export default function FarmingSimulator() {
                   </div>
                 </div>
 
-                {/* Breakdown */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   {[
-                    { label: 'Total Cost',     value: `₹${result.totalCost.toLocaleString()}`,   color: '#f87171', icon: '💸' },
-                    { label: 'Total Revenue',  value: `₹${result.totalProfit.toLocaleString()}`, color: '#4caf72', icon: '💰' },
-                    { label: 'Crop Duration',  value: result.data.duration,                      color: '#60a5fa', icon: '⏱' },
-                    { label: 'Water Needed',   value: result.data.water,                         color: '#a78bfa', icon: '💧' },
+                    { label: 'Total Cost',    value: `₹${result.totalCost.toLocaleString()}`,   color: '#f87171', icon: '💸' },
+                    { label: 'Total Revenue', value: `₹${result.totalProfit.toLocaleString()}`, color: '#4caf72', icon: '💰' },
+                    { label: 'Crop Duration', value: result.data.duration,                      color: '#60a5fa', icon: '⏱' },
+                    { label: 'Water Needed',  value: result.data.water,                         color: '#a78bfa', icon: '💧' },
                   ].map((item, i) => (
                     <div key={i} style={{ padding: '14px', background: 'rgba(13,40,24,0.5)', borderRadius: 12, border: '1px solid rgba(76,175,114,0.12)' }}>
                       <div style={{ fontSize: '0.75rem', color: '#a8c4b0', marginBottom: 6 }}>{item.icon} {item.label}</div>
@@ -229,7 +247,6 @@ export default function FarmingSimulator() {
                   ))}
                 </div>
 
-                {/* Budget Check */}
                 <div style={{ padding: '14px 16px', borderRadius: 12, background: result.budgetSufficient ? 'rgba(76,175,114,0.1)' : 'rgba(239,68,68,0.1)', border: `1px solid ${result.budgetSufficient ? 'rgba(76,175,114,0.3)' : 'rgba(239,68,68,0.3)'}`, fontSize: '0.85rem' }}>
                   {result.budgetSufficient
                     ? <span style={{ color: '#4caf72' }}>✅ Budget sufficient hai — farming shuru kar sakte ho!</span>
@@ -237,7 +254,6 @@ export default function FarmingSimulator() {
                   }
                 </div>
 
-                {/* Risk */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: 8 }}>
                     <span style={{ color: '#a8c4b0' }}>Crop Failure Risk</span>
@@ -248,7 +264,6 @@ export default function FarmingSimulator() {
                   </div>
                 </div>
 
-                {/* ⚡ Groq AI Advice */}
                 {(aiLoading || aiAdvice) && (
                   <div style={{ padding: '16px', background: 'rgba(232,184,75,0.08)', border: '1px solid rgba(232,184,75,0.25)', borderRadius: 12 }}>
                     <div style={{ fontSize: '0.75rem', color: '#e8b84b', fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -263,7 +278,6 @@ export default function FarmingSimulator() {
                     )}
                   </div>
                 )}
-
               </div>
             )}
           </div>

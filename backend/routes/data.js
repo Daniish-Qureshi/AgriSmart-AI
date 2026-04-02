@@ -6,6 +6,7 @@ const auth = require('../middleware/auth')
 // Get all simulations of user
 router.get('/simulation', auth, async (req, res) => {
   try {
+    res.set('Cache-Control', 'no-store')
     const result = await pool.query(
       'SELECT * FROM simulations WHERE user_id = $1 ORDER BY created_at DESC',
       [req.user.id]
@@ -33,6 +34,7 @@ router.post('/simulation', auth, async (req, res) => {
 // Get soil records
 router.get('/soil', auth, async (req, res) => {
   try {
+    res.set('Cache-Control', 'no-store')
     const result = await pool.query(
       'SELECT * FROM soil_records WHERE user_id = $1 ORDER BY created_at DESC',
       [req.user.id]

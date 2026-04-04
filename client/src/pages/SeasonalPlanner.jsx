@@ -51,10 +51,45 @@ export default function SeasonalPlanner() {
         .month-card.active-card{border-color:rgba(232,184,75,0.4);background:rgba(232,184,75,0.07)}
         .task-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;font-size:0.83rem;color:#d0d0d0;border-bottom:1px solid rgba(255,255,255,0.04)}
         .task-item:last-child{border-bottom:none}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .month-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .header-section { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+          .legend-section { flex-wrap: wrap !important; gap: 12px !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .month-card { padding: 16px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        ☰ Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #2d7a4f, #e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -74,8 +109,8 @@ export default function SeasonalPlanner() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
-        <div className="fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+        <div className="fade-up header-section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 42, height: 42, background: 'rgba(20,184,166,0.2)', border: '1px solid rgba(20,184,166,0.4)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>📅</div>
             <div>
@@ -94,7 +129,7 @@ export default function SeasonalPlanner() {
         </div>
 
         {/* Legend */}
-        <div className="fade-up" style={{ display: 'flex', gap: 20, marginBottom: 28 }}>
+        <div className="fade-up legend-section" style={{ display: 'flex', gap: 20, marginBottom: 28 }}>
           {[{ color: '#4caf72', label: 'Completed' }, { color: '#e8b84b', label: 'Current Month' }, { color: '#a8c4b0', label: 'Upcoming' }].map((l, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem', color: '#a8c4b0' }}>
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: l.color }} />{l.label}
@@ -103,7 +138,7 @@ export default function SeasonalPlanner() {
         </div>
 
         {/* Timeline */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }} className="month-grid">
           {plan.map((p, i) => (
             <div key={i} className={`month-card ${p.status === 'active' ? 'active-card' : ''}`}>
               {/* Status dot */}

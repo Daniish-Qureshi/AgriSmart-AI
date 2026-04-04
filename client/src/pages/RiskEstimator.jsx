@@ -98,10 +98,45 @@ export default function RiskEstimator() {
         .option-chip{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(76,175,114,0.2);background:rgba(255,255,255,0.03);color:#a8c4b0;text-align:center;cursor:pointer;font-size:0.82rem;transition:all 0.2s}
         .option-chip.selected{border-color:#e8b84b;background:rgba(232,184,75,0.12);color:#e8b84b;font-weight:600}
         .option-chip:hover{border-color:rgba(255,255,255,0.2);color:#fff}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .risk-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .option-chips { flex-direction: column !important; gap: 8px !important; }
+          .option-chip { flex: none !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .card { padding: 16px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        ☰ Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#2d7a4f,#e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -121,7 +156,7 @@ export default function RiskEstimator() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
 
         {/* Header */}
         <div className="fade-up" style={{ marginBottom: 32 }}>
@@ -134,7 +169,7 @@ export default function RiskEstimator() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24 }} className="risk-grid">
 
           {/* Input Form */}
           <div className="card fade-up">
@@ -156,7 +191,7 @@ export default function RiskEstimator() {
               {/* Season */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.82rem', color: '#a8c4b0', marginBottom: 8, fontWeight: 500 }}>🌤 Season</label>
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ display: 'flex', gap: 8 }} className="option-chips">
                   {['Rabi', 'Kharif', 'Zaid'].map(s => (
                     <div key={s} className={`option-chip ${season === s ? 'selected' : ''}`} onClick={() => setSeason(s)}>
                       {s === 'Rabi' ? '❄️' : s === 'Kharif' ? '☀️' : '🌸'} {s}

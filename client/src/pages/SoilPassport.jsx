@@ -37,6 +37,24 @@ export default function SoilPassport() {
       if (suggestions.length === 0) suggestions.push({ icon: '✅', text: 'Soil ekdum perfect hai! Koi kami nahi.', color: '#4caf72' })
       const bestCrops = ph >= 6 && ph <= 7 ? ['Wheat 🌾', 'Mustard 🌻', 'Pea 🟢'] : ph < 6 ? ['Rice 🍚', 'Tea 🍵', 'Potato 🥔'] : ['Cotton 🌸', 'Sugarcane 🎋', 'Barley 🌾']
       setResult({ phStatus, phColor, overallScore, suggestions, bestCrops });
+
+      // ── Save to localStorage for Dashboard ──
+      const soilResult = {
+        ph_level: parseFloat(form.ph),
+        nitrogen: form.nitrogen,
+        phosphorus: form.phosphorus,
+        potassium: form.potassium,
+        suggestion: suggestions.length > 0 ? suggestions[0].text : 'Normal Levels',
+        overallScore,
+        phStatus,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Save to localStorage for Dashboard to read
+      const existingSoilData = JSON.parse(localStorage.getItem('soilData') || '[]');
+      existingSoilData.unshift(soilResult);
+      localStorage.setItem('soilData', JSON.stringify(existingSoilData.slice(0, 10))); // Keep latest 10 records
+      
       const token = localStorage.getItem('token');
       if (token) {
         try {
@@ -83,10 +101,43 @@ export default function SoilPassport() {
         .fade-up{animation:fadeUp 0.5s ease both}
         @keyframes spin{to{transform:rotate(360deg)}}
         .spinner{width:32px;height:32px;border:3px solid rgba(232,184,75,0.2);border-top-color:#e8b84b;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .soil-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .card { padding: 16px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        ☰ Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #2d7a4f, #e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -106,7 +157,7 @@ export default function SoilPassport() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
         <div className="fade-up" style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 42, height: 42, background: 'rgba(139,94,60,0.3)', border: '1px solid rgba(139,94,60,0.5)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🪱</div>
@@ -117,7 +168,7 @@ export default function SoilPassport() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24 }} className="soil-grid">
           {/* Form */}
           <div className="card fade-up">
             <div style={{ fontSize: '0.75rem', color: '#a8c4b0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 24 }}>🧪 Soil Test Data Dalo</div>

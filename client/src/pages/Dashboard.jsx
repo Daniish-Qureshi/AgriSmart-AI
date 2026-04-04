@@ -28,8 +28,45 @@ export default function Dashboard() {
 
         if (simRes.ok) setSimulations(await simRes.json())
         if (soilRes.ok) setSoilTasks(await soilRes.json())
+        
+        // ── Read soil data from localStorage (from Soil Passport) ──
+        const localSoilData = JSON.parse(localStorage.getItem('soilData') || '[]');
+        if (localSoilData.length > 0) {
+          // Convert localStorage data to match API format
+          const formattedSoilData = localSoilData.map(item => ({
+            id: Date.now() + Math.random(), // Generate unique ID
+            ph_level: item.ph_level,
+            nitrogen: item.nitrogen,
+            phosphorus: item.phosphorus,
+            potassium: item.potassium,
+            suggestion: item.suggestion,
+            created_at: item.timestamp,
+            overall_score: item.overallScore,
+            ph_status: item.phStatus
+          }));
+          
+          // Combine API data with localStorage data
+          const allSoilData = [...formattedSoilData, ...(soilRes.ok ? await soilRes.json() : [])];
+          setSoilTasks(allSoilData);
+        }
       } catch (err) {
         console.error('Failed to fetch data', err)
+        // Fallback to localStorage only if API fails
+        const localSoilData = JSON.parse(localStorage.getItem('soilData') || '[]');
+        if (localSoilData.length > 0) {
+          const formattedSoilData = localSoilData.map(item => ({
+            id: Date.now() + Math.random(),
+            ph_level: item.ph_level,
+            nitrogen: item.nitrogen,
+            phosphorus: item.phosphorus,
+            potassium: item.potassium,
+            suggestion: item.suggestion,
+            created_at: item.timestamp,
+            overall_score: item.overallScore,
+            ph_status: item.phStatus
+          }));
+          setSoilTasks(formattedSoilData);
+        }
       } finally {
         setLoading(false)
       }
@@ -58,10 +95,44 @@ export default function Dashboard() {
         @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         .fade-up { animation: fadeUp 0.5s ease both; }
         .emp-state { text-align: center; padding: 40px 20px; color: #a8c4b0; fontSize: 0.9rem; border: 1px dashed rgba(76,175,114,0.3); borderRadius: 12px; margin-top: 20px; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+          .sim-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          .stats-grid { grid-template-columns: 1fr !important; }
+          .main-content { padding: 60px 12px 20px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #2d7a4f, #e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -84,7 +155,7 @@ export default function Dashboard() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
 
         {/* Header */}
         <div className="fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
@@ -104,12 +175,12 @@ export default function Dashboard() {
         ) : (
           <>
             {/* Top Stats */}
-            <div className="fade-up" style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
+            <div className="fade-up stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
               {[
                 { label: 'Calculated Profit', value: `₹${estProfit.toLocaleString()}`, sub: 'All recorded simulations', icon: '💰' },
                 { label: 'Active Crops', value: cropsArray.length.toString(), sub: cropsArray.join(', ') || 'No crops yet', icon: '🌿' },
                 { label: 'Land Simulated', value: `${totalAcres} Acres`, sub: 'Total farmed area', icon: '🗺️' },
-                { label: 'Soil Health', value: latestSoil ? 'Recorded' : 'Unk.', sub: latestSoil ? `pH: ${latestSoil.ph_level}` : 'No test logged', icon: '🪱' },
+                { label: 'Soil Health', value: latestSoil ? `${latestSoil.overall_score || latestSoil.ph_level}` : 'Unk.', sub: latestSoil ? `pH: ${latestSoil.ph_level} (${latestSoil.ph_status || 'Unknown'})` : 'No test logged', icon: '🪱' },
               ].map((s, i) => (
                 <div key={i} className="stat-mini">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -132,7 +203,7 @@ export default function Dashboard() {
                   <button onClick={() => navigate('/simulator')} style={{ marginTop: 15, padding: '10px 20px', background: '#e8b84b', color: '#0d2818', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}>Start Simulator</button>
                 </div>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 16 }} className="sim-grid">
                   {simulations.map((sim, i) => (
                     <div key={i} style={{ background: 'rgba(0,0,0,0.2)', padding: 16, borderRadius: 12, border: '1px solid rgba(76,175,114,0.1)' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -159,8 +230,18 @@ export default function Dashboard() {
                   {soilTasks.map((soil, i) => (
                     <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: 12, background: 'rgba(0,0,0,0.2)', borderRadius: 10, border: '1px solid rgba(76,175,114,0.1)' }}>
                       <div>
-                        <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>pH: {soil.ph_level}</div>
-                        <div style={{ fontSize: '0.78rem', color: '#a8c4b0' }}>N: {soil.nitrogen} | P: {soil.phosphorus} | K: {soil.potassium}</div>
+                        <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>
+                          pH: {soil.ph_level} 
+                          {soil.overall_score && <span style={{ marginLeft: 8, padding: '2px 8px', background: soil.overall_score >= 70 ? 'rgba(76,175,114,0.2)' : soil.overall_score >= 40 ? 'rgba(232,184,75,0.2)' : 'rgba(239,68,68,0.2)', borderRadius: 12, fontSize: '0.7rem', color: soil.overall_score >= 70 ? '#4caf72' : soil.overall_score >= 40 ? '#e8b84b' : '#f87171' }}>
+                            {soil.overall_score}% Score
+                          </span>}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: '#a8c4b0' }}>
+                          N: {soil.nitrogen} | P: {soil.phosphorus} | K: {soil.potassium}
+                          {soil.ph_status && <span style={{ marginLeft: 8, color: soil.ph_status === 'Neutral' ? '#4caf72' : soil.ph_status === 'Acidic' ? '#f87171' : '#e8b84b' }}>
+                            ({soil.ph_status})
+                          </span>}
+                        </div>
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#a8c4b0', maxWidth: 200, textAlign: 'right' }}>
                         {soil.suggestion || "Normal Levels"}

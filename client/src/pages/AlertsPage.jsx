@@ -50,10 +50,46 @@ export default function AlertsPage() {
         .filter-btn.active{background:rgba(232,184,75,0.15);color:#e8b84b;border-color:rgba(232,184,75,0.3)}
         @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .fade-up{animation:fadeUp 0.5s ease both}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+          .filter-section { flex-wrap: wrap !important; gap: 8px !important; }
+          .header-section { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .stats-grid { grid-template-columns: 1fr !important; }
+          .alert-card { padding: 16px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        ☰ Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #2d7a4f, #e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -75,8 +111,8 @@ export default function AlertsPage() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
-        <div className="fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+        <div className="fade-up header-section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 42, height: 42, background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🔔</div>
             <div>
@@ -95,7 +131,7 @@ export default function AlertsPage() {
         </div>
 
         {/* Stats */}
-        <div className="fade-up" style={{ display: 'flex', gap: 14, marginBottom: 28 }}>
+        <div className="fade-up stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 28 }}>
           {[
             { label: 'Total Alerts', value: alerts.length, color: '#fff' },
             { label: 'Unread', value: unread, color: '#e8b84b' },
@@ -110,7 +146,7 @@ export default function AlertsPage() {
         </div>
 
         {/* Filters */}
-        <div className="fade-up" style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        <div className="fade-up filter-section" style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
           {['All', 'Weather', 'Market', 'Disease', 'Soil'].map(f => (
             <button key={f} className={`filter-btn ${filter === f ? 'active' : ''}`} onClick={() => setFilter(f)}>{f}</button>
           ))}

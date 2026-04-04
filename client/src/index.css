@@ -54,8 +54,34 @@
 
   /* Hide desktop stat cards on landing */
   .hero-stats { display: none !important; }
+  
+  /* Mobile navigation improvements */
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  
+  .desktop-nav {
+    display: none !important;
+  }
 }
 
 @media (max-width: 480px) {
   .main-content { padding: 60px 12px 20px !important; }
+  
+  /* Extra small mobile adjustments */
+  .dash-card {
+    padding: 16px !important;
+  }
+}
+
+/* Tablet improvements */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    margin-left: 200px;
+    padding: 28px 24px;
+  }
+  
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

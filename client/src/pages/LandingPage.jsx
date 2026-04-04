@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import logo from "../assets/logo.jpg.jpeg";
+import heroImage from "../assets/hero-image.jpg";
 
 export default function LandingPage() {
   useEffect(() => {
@@ -44,10 +45,43 @@ export default function LandingPage() {
         .pulse-dot { animation: pulse 2s infinite; }
         .step-num { transition: all 0.3s; }
         .step:hover .step-num { background: #e8b84b !important; color: #0d2818 !important; }
+        
+        /* Responsive Improvements */
+        @media (max-width: 1024px) {
+          .nav-container { padding: 15px 30px !important; }
+          .hero-section { padding: 140px 40px 60px !important; flex-direction: column !important; align-items: flex-start !important; }
+          .stat-cards-container { position: relative !important; right: auto !important; top: auto !important; transform: none !important; flex-direction: row !important; flex-wrap: wrap; justify-content: flex-start; margin-top: 40px; width: 100%; gap: 15px !important; }
+          .stat-card { min-width: 160px !important; padding: 18px 20px !important; }
+          .features-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .bg-circles { display: none !important; }
+        }
+        @media (max-width: 768px) {
+          .nav-container { padding: 15px 20px !important; }
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: block !important; }
+          .hero-section { padding: 120px 20px 40px !important; }
+          .hero-content h1 { font-size: 2.2rem !important; }
+          .features-section, .how-it-works-section, .cta-section { padding: 60px 20px !important; }
+          .features-grid { grid-template-columns: 1fr !important; }
+          .steps-container { flex-direction: column !important; gap: 40px !important; }
+          .step-line { display: none !important; }
+          .footer-container { flex-direction: column !important; gap: 20px; text-align: center; padding: 30px 20px !important; }
+        }
+        @media (max-width: 480px) {
+          .nav-container { padding: 12px 15px !important; }
+          .hero-section { padding: 100px 15px 30px !important; }
+          .hero-content h1 { font-size: 1.8rem !important; }
+          .hero-content p { font-size: 0.9rem !important; }
+          .features-section, .how-it-works-section, .cta-section { padding: 40px 15px !important; }
+          .stat-card { min-width: 140px !important; padding: 15px !important; }
+          .stat-card div:nth-child(2) { font-size: 1.4rem !important; }
+          .feature-card { padding: 25px 20px !important; }
+        }
       `}</style>
 
       {/* NAVBAR */}
       <nav
+        className="nav-container"
         style={{
           position: "fixed",
           top: 0,
@@ -85,7 +119,88 @@ export default function LandingPage() {
           />
           Agri<span style={{ color: "#e8b84b" }}>Smart</span>
         </div>
-        <div style={{ display: "flex", gap: 36, alignItems: "center" }}>
+        <div className="nav-links" style={{ display: "flex", gap: 36, alignItems: "center" }}>
+          {/* Desktop Navigation */}
+          <div className="desktop-nav" style={{ display: "flex", gap: 36, alignItems: "center" }}>
+            {[
+              { name: "Features", href: "#features", mobileHide: true },
+              { name: "Dashboard", href: "/dashboard" },
+              { name: "How it Works", href: "#how-it-works", mobileHide: true }
+            ].map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className={item.mobileHide ? "hide-mobile" : ""}
+                onClick={(e) => {
+                  if (item.href.startsWith("#")) {
+                    e.preventDefault();
+                    document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                style={{
+                  color: "#a8c4b0",
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                  fontWeight: 500,
+                }}
+              >
+                {item.name}
+              </a>
+            ))}
+            <a
+              href="/login"
+              style={{
+                background: "#e8b84b",
+                color: "#0d2818",
+                padding: "10px 22px",
+                borderRadius: 8,
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+              }}
+            >
+              Get Started
+            </a>
+          </div>
+          
+          {/* Mobile Menu Button */}
+          <button
+            className="mobile-menu-btn"
+            onClick={() => {
+              const mobileMenu = document.querySelector('.mobile-menu');
+              mobileMenu.style.display = mobileMenu.style.display === 'flex' ? 'none' : 'flex';
+            }}
+            style={{
+              display: 'none',
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              fontSize: '1.5rem',
+              cursor: 'pointer',
+              padding: '5px'
+            }}
+          >
+            ☰
+          </button>
+        </div>
+        
+        {/* Mobile Menu */}
+        <div 
+          className="mobile-menu"
+          style={{
+            display: 'none',
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            background: 'rgba(13,40,24,0.98)',
+            backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(232,184,75,0.15)',
+            flexDirection: 'column',
+            padding: '20px',
+            gap: '15px'
+          }}
+        >
           {[
             { name: "Features", href: "#features" },
             { name: "Dashboard", href: "/dashboard" },
@@ -98,13 +213,16 @@ export default function LandingPage() {
                 if (item.href.startsWith("#")) {
                   e.preventDefault();
                   document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                  document.querySelector('.mobile-menu').style.display = 'none';
                 }
               }}
               style={{
                 color: "#a8c4b0",
                 textDecoration: "none",
-                fontSize: "0.9rem",
+                fontSize: "1rem",
                 fontWeight: 500,
+                padding: "10px 0",
+                borderBottom: "1px solid rgba(76,175,114,0.1)"
               }}
             >
               {item.name}
@@ -115,11 +233,13 @@ export default function LandingPage() {
             style={{
               background: "#e8b84b",
               color: "#0d2818",
-              padding: "10px 22px",
+              padding: "12px 20px",
               borderRadius: 8,
               fontWeight: 600,
-              fontSize: "0.9rem",
+              fontSize: "1rem",
               textDecoration: "none",
+              textAlign: 'center',
+              marginTop: '10px'
             }}
           >
             Get Started
@@ -129,17 +249,23 @@ export default function LandingPage() {
 
       {/* HERO */}
       <section
+        className="hero-section"
         style={{
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
-          padding: "120px 60px 80px",
+          padding: "100px 60px 60px",
           position: "relative",
           overflow: "hidden",
+          backgroundImage: `linear-gradient(rgba(13,40,24,0.4), rgba(13,40,24,0.4)), url(${heroImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         {/* BG Circles */}
         <div
+          className="bg-circles"
           style={{
             position: "absolute",
             width: 600,
@@ -151,9 +277,11 @@ export default function LandingPage() {
             top: -100,
             right: -100,
             pointerEvents: "none",
+            zIndex: 0,
           }}
         />
         <div
+          className="bg-circles"
           style={{
             position: "absolute",
             width: 400,
@@ -165,6 +293,7 @@ export default function LandingPage() {
             bottom: -50,
             left: 200,
             pointerEvents: "none",
+            zIndex: 0,
           }}
         />
 
@@ -273,6 +402,7 @@ export default function LandingPage() {
 
         {/* Stat Cards */}
         <div
+          className="stat-cards-container"
           style={{
             position: "absolute",
             right: 60,
@@ -329,7 +459,7 @@ export default function LandingPage() {
       {/* FEATURES */}
       <section
         id="features"
-        className="reveal"
+        className="reveal features-section"
         style={{
           padding: "100px 60px",
           background: "rgba(26,74,46,0.2)",
@@ -374,6 +504,7 @@ export default function LandingPage() {
         </div>
 
         <div
+          className="features-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
@@ -493,7 +624,7 @@ export default function LandingPage() {
       {/* HOW IT WORKS */}
       <section
         id="how-it-works"
-        className="reveal"
+        className="reveal how-it-works-section"
         style={{ padding: "100px 60px", textAlign: "center" }}
       >
         <div
@@ -523,6 +654,7 @@ export default function LandingPage() {
         </p>
 
         <div
+          className="steps-container"
           style={{
             display: "flex",
             justifyContent: "center",
@@ -533,6 +665,7 @@ export default function LandingPage() {
           }}
         >
           <div
+            className="step-line"
             style={{
               position: "absolute",
               top: 28,
@@ -612,7 +745,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section
-        className="reveal"
+        className="reveal cta-section"
         style={{
           padding: "100px 60px",
           textAlign: "center",
@@ -685,6 +818,7 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer
+        className="footer-container"
         style={{
           borderTop: "1px solid rgba(76,175,114,0.12)",
           padding: "32px 60px",

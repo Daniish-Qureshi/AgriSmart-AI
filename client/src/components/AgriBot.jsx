@@ -72,8 +72,15 @@ export default function AgriBot() {
             {/* Chat Window */}
             {isOpen && (
                 <div style={{
-                    position: 'fixed', bottom: 30, right: 30, zIndex: 9999,
-                    width: 360, height: 500, background: 'rgba(13,40,24,0.98)',
+                    position: 'fixed', 
+                    bottom: window.innerWidth <= 768 ? 20 : 30, 
+                    right: window.innerWidth <= 768 ? 20 : 30, 
+                    left: window.innerWidth <= 768 ? 20 : 'auto',
+                    top: window.innerWidth <= 768 ? 80 : 'auto',
+                    zIndex: 9999,
+                    width: window.innerWidth <= 768 ? 'auto' : 360, 
+                    height: window.innerWidth <= 768 ? 'auto' : 500, 
+                    background: 'rgba(13,40,24,0.98)',
                     border: '1px solid rgba(76,175,114,0.3)', borderRadius: 20,
                     boxShadow: '0 15px 40px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column',
                     fontFamily: "'DM Sans', sans-serif", color: '#fff'

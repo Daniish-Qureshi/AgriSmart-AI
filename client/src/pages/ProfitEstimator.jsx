@@ -46,10 +46,46 @@ export default function ProfitEstimator() {
         .select-field option{background:#1a4a2e}
         @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .fade-up{animation:fadeUp 0.5s ease both}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .crops-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .filter-section { flex-direction: column !important; gap: 10px !important; }
+          .banner-section { flex-direction: column !important; gap: 16px !important; text-align: center !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .card { padding: 16px !important; }
+          .crop-card { padding: 16px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        ☰ Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #2d7a4f, #e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -69,7 +105,7 @@ export default function ProfitEstimator() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
         <div className="fade-up" style={{ marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -80,7 +116,7 @@ export default function ProfitEstimator() {
               </div>
             </div>
             {/* Filters */}
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }} className="filter-section">
               <input className="input-field" type="number" value={acres} onChange={e => setAcres(e.target.value)} placeholder="Acres" style={{ width: 90 }} />
               <select className="select-field" value={season} onChange={e => setSeason(e.target.value)}>
                 <option value="All">All Seasons</option>
@@ -99,7 +135,7 @@ export default function ProfitEstimator() {
 
         {/* Best Pick Banner */}
         {best && (
-          <div className="fade-up" style={{ marginBottom: 24, padding: '20px 24px', background: 'rgba(232,184,75,0.1)', border: '1px solid rgba(232,184,75,0.3)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="fade-up banner-section" style={{ marginBottom: 24, padding: '20px 24px', background: 'rgba(232,184,75,0.1)', border: '1px solid rgba(232,184,75,0.3)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <div style={{ fontSize: '2rem' }}>🏆</div>
               <div>
@@ -115,7 +151,7 @@ export default function ProfitEstimator() {
         )}
 
         {/* Crops Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }} className="crops-grid">
           {filtered.map((c, i) => (
             <div key={c.name} className={`crop-card ${i === 0 ? 'top' : ''}`}>
               {i === 0 && <div style={{ fontSize: '0.7rem', color: '#e8b84b', fontWeight: 600, marginBottom: 10, letterSpacing: '0.08em' }}>🏆 BEST CHOICE</div>}

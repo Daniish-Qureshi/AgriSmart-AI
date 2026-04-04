@@ -82,10 +82,46 @@ export default function ProfilePage() {
         @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .fade-up{animation:fadeUp 0.5s ease both}
         label{display:block;font-size:0.8rem;color:#a8c4b0;margin-bottom:7px;font-weight:500}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .form-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .avatar-section { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+          .tabs-section { flex-direction: column !important; gap: 8px !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .card { padding: 20px !important; }
+          .save-btn { width: 100% !important; padding: 15px !important; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        ☰ Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#2d7a4f,#e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -101,7 +137,7 @@ export default function ProfilePage() {
         <div onClick={() => navigate('/profile')} style={{ borderTop: '1px solid rgba(76,175,114,0.1)', paddingTop: 16, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '16px 8px 8px', borderRadius: 10, background: 'rgba(232,184,75,0.08)', border: '1px solid rgba(232,184,75,0.2)', marginTop: 16 }}>
           {avatar
             ? <img src={avatar} alt="avatar" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} />
-            : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#2d7a4f,#4caf72)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{(user.name || 'U').charAt(0).toUpperCase()}</div>
+            : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#2d7a4f,#4caf72)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 700 }}>{(user.name || 'U').charAt(0).toUpperCase()}</div>
           }
           <div>
             <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{user.name}</div>
@@ -112,7 +148,7 @@ export default function ProfilePage() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px', maxWidth: 900 }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px', maxWidth: 900 }}>
 
         {/* Header */}
         <div className="fade-up" style={{ marginBottom: 32 }}>
@@ -126,7 +162,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tabs */}
-        <div className="fade-up" style={{ display: 'flex', gap: 8, marginBottom: 28 }}>
+        <div className="fade-up tabs-section" style={{ display: 'flex', gap: 8, marginBottom: 28 }}>
           {[['profile', '👤 Profile Details'], ['farm', '🌾 Farm Details'], ['password', '🔒 Password']].map(([key, label]) => (
             <button key={key} className={`tab-btn ${activeTab === key ? 'tab-active' : 'tab-inactive'}`} onClick={() => setActiveTab(key)}>{label}</button>
           ))}
@@ -137,7 +173,7 @@ export default function ProfilePage() {
           <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
             {/* Avatar */}
-            <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <div className="card avatar-section" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
               <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => fileRef.current.click()}>
                 {avatar
                   ? <img src={avatar} alt="avatar" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '3px solid #e8b84b' }} />
@@ -158,7 +194,7 @@ export default function ProfilePage() {
             {/* Personal Info */}
             <div className="card">
               <div style={{ fontSize: '0.75rem', color: '#a8c4b0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 20 }}>Personal Information</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="form-grid">
                 <div>
                   <label>Full Name</label>
                   <input className="input-field" type="text" placeholder="Apna naam likhो" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />

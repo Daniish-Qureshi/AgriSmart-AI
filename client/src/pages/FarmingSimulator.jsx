@@ -105,10 +105,46 @@ export default function FarmingSimulator() {
         @keyframes spin { to { transform: rotate(360deg); } }
         .spinner { width: 32px; height: 32px; border: 3px solid rgba(232,184,75,0.2); border-top-color: #e8b84b; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
         .info-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(26,74,46,0.5); border: 1px solid rgba(76,175,114,0.2); border-radius: 20px; font-size: 0.78rem; color: #a8c4b0; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; display: none; pointer-events: none; }
+          .mobile-sidebar-overlay.active { display: block; pointer-events: auto; }
+          .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 65; }
+          .sidebar.active { transform: translateX(0); }
+          .mobile-menu-btn { display: block !important; position: fixed; top: 20px; left: 20px; z-index: 100; background: #e8b84b; border: none; border-radius: 8px; padding: 8px 12px; color: #0d2818; font-weight: 600; cursor: pointer; }
+          .main-content { margin-left: 0 !important; padding: 70px 16px 24px !important; }
+          .sim-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .season-grid { grid-template-columns: repeat(3, 1fr) !important; }
+          .result-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          .main-content { padding: 60px 12px 20px !important; }
+          .season-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
+          .info-chip { font-size: 0.7rem; padding: 4px 10px; }
+        }
       `}</style>
 
+      {/* Mobile Menu Button */}
+      <button className="mobile-menu-btn" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }} style={{ display: 'none' }}>
+        Menu
+      </button>
+      
+      {/* Mobile Overlay */}
+      <div className="mobile-sidebar-overlay" onClick={() => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }} />
+
       {/* SIDEBAR */}
-      <div style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
+      <div className="sidebar" style={{ width: 240, background: 'rgba(13,40,24,0.95)', borderRight: '1px solid rgba(76,175,114,0.12)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 8px 28px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 20 }}>
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #2d7a4f, #e8b84b)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🌾</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontWeight: 700 }}>Agri<span style={{ color: '#e8b84b' }}>Smart</span></span>
@@ -133,7 +169,7 @@ export default function FarmingSimulator() {
       </div>
 
       {/* MAIN */}
-      <div style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
+      <div className="main-content" style={{ marginLeft: 240, flex: 1, padding: '32px 36px' }}>
         <div className="fade-up" style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 42, height: 42, background: 'rgba(45,122,79,0.3)', border: '1px solid rgba(45,122,79,0.5)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🌿</div>
@@ -144,7 +180,7 @@ export default function FarmingSimulator() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24 }} className="sim-grid">
 
           {/* Input Form */}
           <div className="fade-up result-card">
@@ -175,7 +211,7 @@ export default function FarmingSimulator() {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.82rem', color: '#a8c4b0', marginBottom: 8, fontWeight: 500 }}>🌤 Season</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }} className="season-grid">
                   {['Rabi', 'Kharif', 'Zaid'].map(s => (
                     <div key={s} onClick={() => setSeason(s)} style={{ padding: '10px', borderRadius: 10, border: `1px solid ${season === s ? '#e8b84b' : 'rgba(76,175,114,0.2)'}`, background: season === s ? 'rgba(232,184,75,0.15)' : 'rgba(255,255,255,0.03)', color: season === s ? '#e8b84b' : '#a8c4b0', textAlign: 'center', cursor: 'pointer', fontSize: '0.85rem', fontWeight: season === s ? 600 : 400, transition: 'all 0.2s' }}>
                       {s === 'Rabi' ? '❄️' : s === 'Kharif' ? '☀️' : '🌸'} {s}
@@ -233,7 +269,7 @@ export default function FarmingSimulator() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }} className="result-grid">
                   {[
                     { label: 'Total Cost',    value: `₹${result.totalCost.toLocaleString()}`,   color: '#f87171', icon: '💸' },
                     { label: 'Total Revenue', value: `₹${result.totalProfit.toLocaleString()}`, color: '#4caf72', icon: '💰' },

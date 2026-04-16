@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const navItems = ['Dashboard', 'Simulator', 'Risk Estimator', 'Soil Passport', 'Profit Estimator', 'Seasonal Planner', 'Alerts']
-const navIcons = ['📊', '🌿', '⚠️', '🪱', '💰', '📅', '🔔']
-const navRoutes = ['/dashboard', '/simulator', '/risk', '/soil', '/profit', '/planner', '/alerts']
+const navItems = ['Dashboard', 'Simulator', 'Govt Schemes', 'Disease Scan', 'Risk Estimator', 'Soil Passport', 'Profit Estimator', 'Seasonal Planner', 'Crop Calendar', 'Community Forum', 'Alerts', 'Equipment Rental']
+const navIcons = ['📊', '🌿', '🏛️', '🦠', '⚠️', '🪱', '💰', '📅', '🗓️', '👥', '🔔', '🛠️']
+const navRoutes = ['/dashboard', '/simulator', '/schemes', '/disease', '/risk', '/soil', '/profit', '/planner', '/crop-calendar', '/forum', '/alerts', '/rental']
 
 export default function Sidebar({ activeItem }) {
   const navigate = useNavigate()
@@ -11,7 +11,7 @@ export default function Sidebar({ activeItem }) {
   const [open, setOpen] = useState(false)
 
   const SidebarContent = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: '100vh' }}>
       {/* Logo */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 8px 24px', borderBottom: '1px solid rgba(76,175,114,0.1)', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -25,7 +25,7 @@ export default function Sidebar({ activeItem }) {
       </div>
 
       {/* Nav */}
-      <nav style={{ flex: 1 }}>
+      <nav style={{ flex: 1, minHeight: 0, overflowY: 'auto', paddingRight: 4, paddingBottom: 12 }}>
         {navItems.map((item, i) => (
           <div key={item}
             className={`nav-item ${activeItem === item ? 'active' : ''}`}
@@ -39,7 +39,7 @@ export default function Sidebar({ activeItem }) {
 
       {/* User */}
       <div onClick={() => { navigate('/profile'); setOpen(false) }}
-        style={{ borderTop: '1px solid rgba(76,175,114,0.1)', paddingTop: 16, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', marginTop: 8 }}>
+        style={{ borderTop: '1px solid rgba(76,175,114,0.1)', paddingTop: 16, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', marginTop: 'auto', paddingBottom: 12, flexShrink: 0 }}>
         {user.avatar
           ? <img src={user.avatar} alt="av" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e8b84b' }} />
           : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#2d7a4f,#4caf72)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', flexShrink: 0 }}>

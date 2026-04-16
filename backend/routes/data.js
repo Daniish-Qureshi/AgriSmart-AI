@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../config/db')
 const auth = require('../middleware/auth')
+const { saveQuestion, getQuestions } = require('../controllers/forumController')
 
 // Get all simulations of user
 router.get('/simulation', auth, async (req, res) => {
@@ -58,5 +59,9 @@ router.post('/soil', auth, async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 })
+
+// Community Forum routes
+router.get('/forum', auth, getQuestions)
+router.post('/forum', auth, saveQuestion)
 
 module.exports = router

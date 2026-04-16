@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -28,7 +29,7 @@ export default function LoginPage() {
         ? { email, password }
         : { name, email, password, location }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -40,9 +41,26 @@ export default function LoginPage() {
         throw new Error(data.message || 'Authentication failed')
       }
 
-      // Automatically go to dashboard on success
+      // 1. Pehle user aur token save karein
       localStorage.setItem('user', JSON.stringify(data.user))
       localStorage.setItem('token', data.token)
+
+      // 2. WELCOME BONUS LOGIC (Jo image mein tha)
+      // Hum sirf Login successful hone par hi ise try karenge
+      if (isLogin && data.token) {
+        try {
+          await fetch(`${API_URL}/api/wallet/welcome-bonus`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${data.token}` }
+          })
+          console.log("Welcome bonus checked/added")
+        } catch (bonusErr) {
+          // Agar bonus pehle mil chuka hai toh error ignore karein
+          console.log("Bonus already credited or failed silently")
+        }
+      }
+
+      // 3. Finally redirect karein
       navigate('/dashboard')
     } catch (err) {
       setError(err.message)
@@ -50,7 +68,6 @@ export default function LoginPage() {
       setLoading(false)
     }
   }
-
   return (
     <div style={{ minHeight: '100vh', background: '#0d2818', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif", position: 'relative', overflow: 'hidden' }}>
 

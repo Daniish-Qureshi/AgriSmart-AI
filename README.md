@@ -2,7 +2,6 @@
 ### India's Most Complete AI-Powered Farming Web Application
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Vercel-brightgreen?style=for-the-badge)](https://agri-smart-ai-xi.vercel.app)
-[![Backend](https://img.shields.io/badge/⚙️_Backend-Render-blue?style=for-the-badge)](https://agrismart-ai-d2dl.onrender.com)
 [![GitHub](https://img.shields.io/badge/GitHub-Daniish--Qureshi-black?style=for-the-badge&logo=github)](https://github.com/Daniish-Qureshi/AgriSmart-AI)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
@@ -16,9 +15,7 @@
 
 | Service | URL |
 |---|---|
-| 🌐 **Frontend** | [agri-smart-ai-xi.vercel.app](https://agri-smart-ai-xi.vercel.app) |
-| ⚙️ **Backend API** | [agrismart-ai-d2dl.onrender.com](https://agrismart-ai-d2dl.onrender.com) |
-| 💻 **GitHub** | [Daniish-Qureshi/AgriSmart-AI](https://github.com/Daniish-Qureshi/AgriSmart-AI) |
+| 🌐 **Frontend** | [agri-smart-ai-xi.vercel.app](https://agri-smart-ai-xi.vercel.app) | [Daniish-Qureshi/AgriSmart-AI](https://github.com/Daniish-Qureshi/AgriSmart-AI) |
 
 ---
 

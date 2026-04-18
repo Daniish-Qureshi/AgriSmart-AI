@@ -1,4 +1,4 @@
-# 🌾 AgriSmart (KisanAI)
+# 🌾 AgriSmart
 ### India's Most Complete AI-Powered Farming Web Application
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Vercel-brightgreen?style=for-the-badge)](https://agri-smart-ai-xi.vercel.app)

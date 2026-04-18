@@ -276,21 +276,6 @@ UPI Failure  :  failure@razorpay
 
 ---
 
-## 👥 Team
-
-| Name | Roll Number | Role |
-|---|---|---|
-| **Danish** | 230812010158 | Full Stack Developer — Frontend, Backend, AI, Deployment |
-| **Md. Saqib** | 230812010174 | UI/UX Designer |
-| **Lalit Rajput** | 230812010168 | Database Administrator |
-| **Jyoti** | 230812010163 | Project Lead & Documentation |
-
-**Guide:** Mr. Manoj Rajora (Dept. of CSE)
-**College:** Vishveshwarya Institute of Engineering & Technology, Dadri, G.B. Nagar, U.P.
-**Course:** BCA Final Year — 2025–2026
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License.

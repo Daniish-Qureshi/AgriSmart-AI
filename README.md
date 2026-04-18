@@ -15,7 +15,7 @@
 
 | Service | URL |
 |---|---|
-| 🌐 **Frontend** | [agri-smart-ai-xi.vercel.app](https://agri-smart-ai-xi.vercel.app) | [Daniish-Qureshi/AgriSmart-AI](https://github.com/Daniish-Qureshi/AgriSmart-AI) |
+| 🌐 **Frontend** | [AgriSmart-AI](https://agri-smart-ai-xi.vercel.app) | [Daniish-Qureshi/AgriSmart-AI](https://github.com/Daniish-Qureshi/AgriSmart-AI) |
 
 ---
 
